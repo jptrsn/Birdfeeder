@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css"> 
+
+<style>
+.branding-below {
+  bottom: 56px;
+  top: 0;
+}
+
+.branding-text {
+  left: 7px;
+  position: relative;
+  top: 3px;
+}
+
+.col-contain {
+  overflow: hidden;
+}
+
+.col-one {
+  float: left;
+  width: 50%;
+}
+
+.logo {
+  vertical-align: middle;
+}
+
+.radio-spacer {
+  height: 20px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.loader {
+  left: 80px;
+  top: 180px;
+}
+</style>
+
+<div class="sidebar branding-below">
+  Error: <?= errorMessage ?>  
+</div>
+<div class="block">
+  <button class=action onClick="<?= fix ?>">Fix</button>
+  <button onClick="google.script.host.close()">Close</button>
+</div>
