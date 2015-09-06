@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css"> 
+
+<style>
+.branding-below {
+  bottom: 56px;
+  top: 0;
+}
+
+.branding-text {
+  left: 7px;
+  position: relative;
+  top: 3px;
+}
+
+.col-contain {
+  overflow: hidden;
+}
+
+.col-one {
+  float: left;
+  width: 50%;
+}
+
+.logo {
+  vertical-align: middle;
+}
+
+.radio-spacer {
+  height: 20px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.loader {
+  left:100px;
+  top: 30px;
+}
+
+</style>
+
+<body>
+<div id="wait" class="sidebar branding-text" style="display:none">
+  <div id="loading" class="loader" style="display:none">
+    <img src="https://9c6673010e499058adcb9bae72f0524ff749ab70-www.googledrive.com/host/0B9exArxMGDDtaGVtYTFEc2prNW8/Loading%20Animation.gif" alt="Loading. Please wait...">
+  </div>
+  <p>
+  Please wait while Birdfeeder resets your spreadsheet.
+  </p>
+</div>
+<div id="warning" class="sidebar branding-text">
+  <div class="block">
+  <p>
+  This will reset the entire add-on. All saved data and scheduled tweets will be erased! 
+  </p>
+  <p> 
+  Click OK to reset Birdfeeder.
+  </p>
+</div>
+<div class = "block">
+  <button class="action" onClick="doClear()">OK</button>
+  <button onClick="google.script.host.close()">Close</button>
+</div>
+</div>
+
+</body>
+
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+
+function doClear() {
+  $( "#wait" ).fadeIn('slow');
+  $( "#warning" ).hide();
+  
+  google.script.run.withSuccessHandler(google.script.host.close).clear();
+  
+  }
+</script>
