@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css"> 
+
+<style>
+.branding-below {
+  bottom: 56px;
+  top: 0;
+}
+
+.branding-text {
+  left: 7px;
+  position: relative;
+  top: 3px;
+}
+
+.col-contain {
+  overflow: hidden;
+}
+
+.col-one {
+  float: left;
+  width: 50%;
+}
+
+.logo {
+  vertical-align: middle;
+}
+
+.radio-spacer {
+  height: 20px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.loader {
+  left: 80px;
+  top: 180px;
+}
+
+</style>
+
+<body>
+<div class="sidebar branding-below">
+  <img src="https://9c6673010e499058adcb9bae72f0524ff749ab70-www.googledrive.com/host/0B9exArxMGDDtaGVtYTFEc2prNW8/Birdfeeder%20Logo.png" style="width:98%" align="middle">
+  <p>
+  For this add-on to work, you need to authorize it to access Twitter on your behalf. Please click on the link below to be redirected to authorize. Once you have successfully authorized, you can close this sidebar and run the add-on.
+  </p>
+  <p>
+    <a href="<?= authorizationUrl ?>" target="_blank"><button class="action">Authorize Twitter</button></a> 
+  </p>
+  <p>
+    Launch the add-on when the authorization is complete.
+  </p>
+  <button onClick="google.script.run.setupSheet()">Launch</button>
+</div>
+</body>
