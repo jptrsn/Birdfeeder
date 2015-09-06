@@ -1,0 +1,322 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css"> 
+
+<style>
+.branding-below {
+  bottom: 56px;
+  top: 0;
+}
+
+.branding-text {
+  left: 7px;
+  position: relative;
+  top: 3px;
+}
+
+.col-contain {
+  overflow: hidden;
+}
+
+.col-one {
+  float: left;
+  width: 50%;
+}
+
+.logo {
+  vertical-align: middle;
+}
+
+.radio-spacer {
+  height: 20px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.loader {
+  left: 0px;
+  top: 80px;
+}
+
+.triangle{
+  float:left;
+  margin: 2px 5px 5px 0px;
+}
+
+.sub-item{
+  margin-left: 15px;
+  margin-top: 5px;
+}
+
+a.tooltip {outline:none; }
+a.tooltip strong {line-height:30px;}
+a.tooltip:hover {text-decoration:none;} 
+a.tooltip span {
+    z-index:10;
+    display:none; 
+    padding:14px 20px;
+    margin-top:-10px; 
+    margin-left:8px;
+    width:200px; 
+    line-height:16px;
+    left:10px;
+}
+a.tooltip:hover span{
+    display:block; 
+    position:absolute; 
+    color:#111;
+    border:1px solid #DCA; 
+    background:#fffAF0;
+}
+
+.callout {
+    z-index:20;
+    position:absolute;
+    top:30px;
+    border:0;
+    left:-200px;
+}
+    
+/*CSS3 extras*/
+a.tooltip span
+{
+    border-radius:4px;
+    box-shadow: 5px 5px 8px #CCC;
+}
+</style>
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+<body>
+  <div id="loading" class="sidebar loader" style="display:none">
+    <img src="https://9c6673010e499058adcb9bae72f0524ff749ab70-www.googledrive.com/host/0B9exArxMGDDtaGVtYTFEc2prNW8/Loading%20Animation.gif" alt="Loading. Please wait...">
+  </div>
+  
+  <div id="inputJob" style="display:none" class="sidebar branding-below">
+    
+      <div class="block" style="overflow:hidden;">
+        <span id="profile" class="block" style="display:block;font-family: 'Helvetica Neue', Roboto, 'Segoe UI', Calibri, sans-serif; font-size:12px;line-height:20px;color:#333"></span>
+        Time Zone: <span id="timeZone"></span>
+          <a class="tooltip" onClick="google.script.run.changeTZ()" style="float:right">[?]
+          <span>Ensure the spreadsheet is set to the correct time zone so your tweets appear as scheduled. 
+          Click for a video explanation of how to change your spreadsheet's time zone.
+          </span>
+         </a>
+      </div>
+      
+      <hr>
+    <form id="form">
+      <div class="block" style="margin-top:16px;line-height:220%">
+        <label for="datePicker" style="width:100px">Start Date</label>
+        <input id="datePicker" name="datePicker" type="date" style="width:140px;position:absolute;left:80px">
+      <br>
+        <label for="time">Start Time </label>
+        <input id="time" name="time" type="time" style="width:140px;position:absolute;left:80px">
+      </div>
+      
+      <div class="block">
+      <label>Select Delay Option 
+        <a name="delayHelp" class="tooltip" style="float:right" onClick="google.script.run.showDelayHint()">[?]<span>Interval is the time between each tweet. Duration is the time between first and last tweet. Click for more details.</span></a>
+      </label>
+      <div id="delayOption" class="sub-item">
+        
+          <input class="radio-spacer" type="radio" name="delay" id="delay_interval" value="#interval" text="interval" onChange="selectDelay()" checked>
+          <label>Interval&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input class="radio-spacer" type="radio" name="delay" id="delay_duration" value="#duration" text="duration" onChange="selectDelay()">
+          <label>Duration</label>
+          <br>
+      </div>
+      
+      <div id="interval" class="sub-item" style="display:block">
+        <input type="number" min="1" id="interval_value" name="interval_value" placeholder="Interval (in minutes)" style="width:190px">
+      </div>
+      
+      <div id="duration" class="sub-item" style="display:none">
+        <input type="number" min="1" id="duration_value" name="duration_value" placeholder="Duration (in minutes)" style="width:190px">
+      </div>
+      
+      </div>
+      
+      <div class="block">
+        <input type="checkbox" name="append" id="append" onClick="showAppend()">
+        <label class="radio-spacer" for="append">Add hashtag</label>
+      
+        <div id="appendContent" class="sub-item" style="display:none">
+          <input id="appendHashtag" name="hashtag" type="text" placeholder="#example" style="width:190px">
+        </div>
+      </div>
+
+      <div class="block" style="margin-top:24px">
+        <button class="action" name="runJob" onClick="runJob()">Run</button>
+        <button name="loadJob" onClick="showLoadJobOption()">Load</button>
+        <button name="close" onClick="google.script.host.close()">Close</button>
+      </div>
+      
+      <div class="block" style="display:block">
+        <span  onClick="showSaveJob()">
+        <img id="saveTriangleUp" class="triangle" style="display:block;" src="https://9c6673010e499058adcb9bae72f0524ff749ab70-www.googledrive.com/host/0B9exArxMGDDtaGVtYTFEc2prNW8/TriangleUp.png" />
+        <img id="saveTriangleDown" class="triangle" style="display:none;" src="https://9c6673010e499058adcb9bae72f0524ff749ab70-www.googledrive.com/host/0B9exArxMGDDtaGVtYTFEc2prNW8/TriangleDown.png" />
+        <label>Save for Later</label></span>
+        <span style="float:right">
+          <a name="delayHelp" class="tooltip" onClick="google.script.run.showSaveHint()">[?]
+            <span>You can save your series of tweets as a "job," letting you access them again at a later date. 
+            This feature helps when you have a set of tweets you want to use repeatedly. 
+            Click for more details.</span>
+          </a>
+        </span>
+      </div>
+        
+      <div id="saveJob" class="sub-item" style="display:none">
+        <p>
+          <input id="saveName" name="saveName" type="text" placeholder="Job Name" style="width:190px">
+        </p>
+        <p>
+          <button id="saveButton" name="saveButton" onClick="saveJob()">Save</button>
+          <button id="cancelSave" name="cancelSave" onClick="showSaveJob()">Cancel</button>
+        </p>
+      </div>
+      
+     
+      
+      <div id="previousJobs" class="sub-item" style="display:none">
+      </div>
+      
+    </form>
+  
+  <div id="success" style="display:none" class="sidebar branding-text">
+    <p>Boom! Success!</p>
+  </div>
+  
+  <div id="failure" style="display:none" class="sidebar branding-text">
+    <p>Uh oh. Something went wrong.</p>
+  </div>
+</div>
+  
+</body>
+ 
+<script>
+  
+  $(document).ready(function() {
+     google.script.run.withSuccessHandler(setTimeZone).withFailureHandler(fail).getTimeZone();
+     
+     google.script.run.withSuccessHandler(showUserInfo).getUserInfo();
+     
+     google.script.run.withSuccessHandler(function(today) {
+       $('#datePicker').val(today);
+       }).getToday();
+     
+     google.script.run.withSuccessHandler(function(now) {
+       $('#time').val(now);
+       }).getNow();
+     
+     $("#inputJob").fadeIn("slow");
+     
+   }); // end document.ready
+  
+  function selectDelay() {
+     var delayOption = $('input[name="delay"]:checked').val();
+     $( "#interval" ).slideUp("fast");
+     $( "#duration" ).slideUp("fast");
+     $( delayOption ).slideDown("fast");
+    
+  };
+  
+  function showUserInfo(user){
+    var content = '<a href="https://twitter.com/' + user.screen_name + '"><img src="' + user.profile_image_url_https 
+    + '" style="float:left;margin: 5px 15px 5px 5px;border-radius:6px"></a><span style="font-family:Arial,sans-serif;font-size:18px;font-weight:700;line-height:24px;color:#333;padding-top:5px;">' 
+    + user.name + '<br/></span>@' + user.screen_name + '<br/><br/>';
+    //console.log(content);
+    $( "#profile" ).html(content);
+    $( "#profile" ).slideDown('slow');
+  }
+  
+  function setTimeZone(timeZone){
+    $( "#timeZone").html("<strong>"+timeZone+"</strong>");
+  };
+  
+  function saveJob() {
+    showLoading();
+    google.script.run.withSuccessHandler(showSuccess).saveJob(document.getElementById("form"));
+  };
+  
+  function runJob() {
+    //console.log("starting runJob");
+    showLoading();
+    google.script.run.withSuccessHandler(showSuccess).runJob(document.getElementById("form"));
+    
+  };
+  
+  function showLoading() {
+    $( "#inputJob" ).fadeOut("slow");
+    $( "#loading" ).fadeIn("fast");
+  }
+  
+  function showSuccess(status) {
+    //console.log("status: " + status);
+    $( "#loading" ).fadeOut("fast");
+    $( "#inputJob" ).fadeIn("fast");
+    
+    if (status == true) {
+      $( "#success" ).slideDown("slow");
+      $( "#success" ).delay(3200).fadeOut("slow");
+    }
+    if (!status) {
+      $( "#failure" ).slideDown("slow");
+      $( "#failure" ).delay(5000).fadeOut("slow");
+    }
+  }
+  
+  function showFailure() {
+    Browser.msgBox('Oh no! This is a problem we didn\'t see coming. Sorry \'bout that!<br> Try again in a minute and see if anything gets better.');
+  }
+  
+  function showAppend() {
+    $( '#appendContent' ).toggle(300);
+  }
+  
+  function showSaveJob() {
+   $('#saveTriangleUp').toggle();
+   $('#saveTriangleDown').toggle();
+   $( '#saveJob' ).toggle(300);
+  }
+  
+  function choosePreviousJob() {
+    showLoading();
+    var selection = $(this).find("option:selected").val();
+    //console.log('Choose Previous Jobs ' + selection);
+    google.script.run.withSuccessHandler(showSuccess).withFailureHandler(showFailure).retrieveJob(selection);
+    google.script.run.withSuccessHandler(changeInterval).getSavedInterval();
+    $( "#previousJobs" ).hide();
+  }
+  
+  function changeInterval(intVal) {
+    //console.log(intVal);
+    $( "#interval_value" ).val(intVal);
+  }
+    
+  
+  function loadListItems(returnedData){
+    //console.log('Loading list items.');
+    $( "#previousJobs" ).html('<p><label>Select a previous job:</label><br><select name="jobChooser" id="jobChooser" onChange="choosePreviousJob()"><option disabled selected> -- select an option -- </option></select></p>');
+    for (var i=0; i<returnedData.length; i++){
+      var jobName = returnedData[i].split('_').join(' ');
+      if (jobName != 'No stored jobs') {
+        var html = "<option value="+returnedData[i]+">"+jobName+"</option>";
+      } else {
+        var html = "<option value="+returnedData[i]+" disabled>"+jobName+"</option>";
+      }
+      $( "#jobChooser" ).append(html);
+      }
+    $( "#previousJobs" ).slideDown();
+  }
+  
+  function showLoadJobOption() {
+    google.script.run.withSuccessHandler(loadListItems).withFailureHandler(showFailure).getListItems();
+    
+  }
+    
+    
+</script>
